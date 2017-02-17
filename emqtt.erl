@@ -44,7 +44,7 @@ loop({C,Db}) ->
 		
 		Newtopic = parser(Payload,<<"id">>),
 		Variable = parser(Payload,<<"room">>),
-		{ok,GH,D} = mysql:query(Db, <<"SELECT user, message, time FROM room where roomName = ?">>, [Variable]),
+		{ok,GH,D} = mysql:query(Db, <<"SELECT user, message, time FROM room where roomName = ?  ORDER BY idroom">>, [Variable]),
 		publishLoop(D,C,Newtopic),
 		Encode = jsx:encode([{<<"nickname">>,<<"ConnectingSpot">>},{<<"message">>,<<"END OF THE CHAT HISTORY">>},{<<"timestamp">>,timestamp()}]),
 		emqttc:publish(C, Newtopic,Encode),
@@ -63,7 +63,7 @@ loop({C,Db}) ->
 		loop({C,Db});
  	
 	  
-	unkown ->
+	unknown ->
 		
 		loop({C,Db})
 end.
